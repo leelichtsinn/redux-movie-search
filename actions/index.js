@@ -14,7 +14,7 @@ export const loadMovies = (searchParam, dispatch) => {
 	// indicate we are loading movies now
 	dispatch(requestMovies());
 
-	fetch(`SOME_API_URL`)
+	fetch(`http://www.omdbapi.com/?s=${searchParam}&r=json`)
   .then((response) => response.json())
   .then((responseJson) => {
     // "we successfully got back a response" scenario
@@ -28,14 +28,17 @@ export const loadMovies = (searchParam, dispatch) => {
     dispatch(someActionCreator(responseJson))
   })
   // ...what about failure?...
+	.catch((error) => dispatch(movieFailure()));
 };
 
 export const requestMovies = () => {
 	// create action for requesting movies
-	// ...
+	return {
+		type: LOAD_REQUEST
+	}
 };
 
-export const someActionCreator = (jsonData) => {
+export const movieSuccess = (jsonData) => {
   return {
     type: LOAD_SUCCESS,
     // anything else you want!!
@@ -44,3 +47,9 @@ export const someActionCreator = (jsonData) => {
     // TODO: handle edge cases: null response, no search results
   }
 };
+
+export const movieFailure	= () => {
+	return {
+		type: LOAD_FAILURE
+	}
+}
